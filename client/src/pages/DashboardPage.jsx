@@ -6,10 +6,10 @@ import AISuggestionCard from '../components/dashboard/AISuggestionCard'
 import NoteCard from '../components/dashboard/NoteCard'
 import ActivitySidebar from '../components/dashboard/ActivitySidebar'
 
-export default function DashboardPage({ onLogout, onOpenNote }) {
+export default function DashboardPage({ onLogout, onOpenNote, onOpenGraph }) {
   return (
     <div className="flex h-screen bg-black text-white">
-      <Sidebar onLogout={onLogout} />
+      <Sidebar onLogout={onLogout} onOpenGraph={onOpenGraph} onOpenHome={() => {}} activePage="Home" />
 
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <TopBar />

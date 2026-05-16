@@ -5,7 +5,7 @@ import CategorySidebar from '../components/dashboard/CategorySidebar'
 export default function GraphPage({ onLogout, onBack }) {
   return (
     <div className="flex h-screen bg-black text-white overflow-hidden">
-      <Sidebar onLogout={onLogout} activePage="Home" />
+      <Sidebar onLogout={onLogout} onOpenHome={onBack} activePage="Categories" />
 
       <main className="flex-1 flex flex-col min-w-0 relative">
         {/* Top Navigation Bar */}
