@@ -154,8 +154,8 @@ export default function DashboardPage({ onLogout, onOpenNote, onOpenGraph, onOpe
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredNotes.map((note) => (
                   <motion.div 
-                    key={note.id} 
-                    onClick={onOpenNote}
+                    key={note._id} 
+                    onClick={() => onOpenNote(note._id)}
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     whileHover={{ y: -5 }}

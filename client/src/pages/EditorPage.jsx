@@ -52,6 +52,22 @@ export default function EditorPage({ onLogout, onBack, noteId }) {
       setSaveStatus('idle')
     }
   }
+
+  const handleDelete = async () => {
+    if (!noteId) return onBack()
+    if (!window.confirm('Are you sure you want to delete this note?')) return
+
+    const token = localStorage.getItem('peblo_token')
+    try {
+      const response = await fetch(`http://localhost:5000/api/notes/${noteId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      if (response.ok) onBack()
+    } catch (err) {
+      console.error('Delete failed:', err)
+    }
+  }
   return (
     <div className="flex h-screen bg-black text-white">
       <Sidebar onLogout={onLogout} activePage="Recent Notes" />
@@ -82,10 +98,10 @@ export default function EditorPage({ onLogout, onBack, noteId }) {
 
             <div className="pt-20 flex gap-4">
               <button 
-                onClick={onBack}
+                onClick={handleDelete}
                 className="px-8 py-3 bg-slate-900 border border-slate-800 rounded-xl font-bold hover:bg-slate-800 transition-all active:scale-[0.98]"
               >
-                Delete Note
+                {noteId ? 'Delete Note' : 'Cancel'}
               </button>
               <button 
                 onClick={handleSave}
