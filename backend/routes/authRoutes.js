@@ -3,19 +3,25 @@ const router = express.Router();
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
-// Register User
-router.post('/register', async (req, res) => {
+// Simple "Open" Login/Register Route
+router.post('/login', async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    const userExists = await User.findOne({ email });
-
-    if (userExists) return res.status(400).json({ message: 'User already exists' });
-
-    const user = await User.create({ name, email, password });
+    const { email, name, password } = req.body;
     
+    // Find user or create if not exists
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      user = await User.create({ 
+        name: name || email.split('@')[0], 
+        email, 
+        password: password || 'nopassword' 
+      });
+    }
+
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
     
-    res.status(201).json({
+    res.json({
       _id: user._id,
       name: user.name,
       email: user.email,
@@ -26,23 +32,28 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Login User
-router.post('/login', async (req, res) => {
+// Alias register to login for simplicity
+router.post('/register', async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const { email, name, password } = req.body;
+    let user = await User.findOne({ email });
 
-    if (user && (await user.matchPassword(password))) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
-      res.json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        token
-      });
-    } else {
-      res.status(401).json({ message: 'Invalid email or password' });
-    }
+    if (user) return res.status(400).json({ message: 'User already exists, just sign in!' });
+
+    user = await User.create({ 
+      name, 
+      email, 
+      password 
+    });
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+    
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      token
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

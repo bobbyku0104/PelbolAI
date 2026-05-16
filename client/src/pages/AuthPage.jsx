@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Mail, Lock, Eye, User, Bot } from 'lucide-react'
+import { Mail, Lock, User, Bot, Sparkles } from 'lucide-react'
 
 export default function AuthPage({ isLogin, setIsLogin, onAuth }) {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' })
@@ -26,11 +26,10 @@ export default function AuthPage({ isLogin, setIsLogin, onAuth }) {
         throw new Error(data.message || 'Authentication failed')
       }
 
-      // Save token to localStorage
       localStorage.setItem('peblo_token', data.token)
       localStorage.setItem('peblo_user', JSON.stringify(data))
       
-      onAuth(e) // Proceed to dashboard
+      onAuth(e)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -39,80 +38,102 @@ export default function AuthPage({ isLogin, setIsLogin, onAuth }) {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4">
-      {/* Branding Header */}
-      <div className="flex flex-col items-center mb-8 text-center">
-        <div className="bg-slate-800/50 p-3 rounded-xl border border-slate-700 shadow-xl mb-4">
-          <Bot className="w-8 h-8 text-indigo-400" />
-        </div>
-        <h1 className="text-2xl font-bold tracking-tight mb-1">Peblo AI</h1>
-        <p className="text-slate-400 text-sm">Focus deep. Create faster.</p>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-black p-4 selection:bg-indigo-500/30">
+      {/* Premium Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-500/10 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/10 rounded-full blur-[120px]"></div>
       </div>
 
-      {/* Auth Card */}
-      <div className="w-full max-w-[400px] bg-[#111111]/80 backdrop-blur-md border border-slate-800/50 p-8 rounded-2xl shadow-2xl transition-all duration-500">
-        <form onSubmit={onAuth} className="space-y-6">
-          <h2 className="text-xl font-bold text-white mb-2">{isLogin ? 'Welcome Back' : 'Create Account'}</h2>
-          
-          {!isLogin && (
-            <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
-              <label className="text-sm font-medium text-slate-300 ml-1">Full Name</label>
-              <div className="relative group">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
-                <input 
-                  type="text" 
-                  placeholder="John Doe" 
-                  className="w-full bg-slate-900/50 border border-slate-700/50 rounded-xl py-3 pl-10 pr-4 outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 transition-all placeholder:text-slate-600 text-slate-200" 
-            <div className="relative group">
-              <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
-              <input 
-                type="text" 
-                placeholder="Full Name" 
-                value={formData.name}
-                onChange={(e) => setFormData({...formData, name: e.target.value})}
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl py-3 pl-11 pr-4 outline-none focus:border-indigo-500 transition-all text-sm"
-              />
+      <div className="w-full max-w-[440px] z-10">
+        {/* Branding */}
+        <div className="flex flex-col items-center mb-10 text-center">
+          <div className="relative mb-6">
+            <div className="absolute inset-0 bg-indigo-500 blur-2xl opacity-20 animate-pulse"></div>
+            <div className="relative bg-slate-900 border border-slate-800 p-4 rounded-2xl shadow-2xl">
+              <Bot className="w-10 h-10 text-indigo-400" />
             </div>
-          )}
+          </div>
+          <h1 className="text-4xl font-bold tracking-tighter text-white mb-2">Peblo AI</h1>
+          <p className="text-slate-500 text-sm font-medium">The Future of Neural Note-Taking</p>
+        </div>
+
+        {/* Auth Card */}
+        <div className="bg-[#0A0A0A] border border-slate-800/60 p-10 rounded-[2rem] shadow-2xl backdrop-blur-xl">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2 mb-8">
+              <h2 className="text-2xl font-bold text-white tracking-tight">{isLogin ? 'Welcome Back' : 'Create Account'}</h2>
+              <p className="text-slate-500 text-xs font-medium uppercase tracking-widest flex items-center gap-2">
+                <Sparkles className="w-3 h-3 text-indigo-400" /> Secure Neural Access
+              </p>
+            </div>
+
+            {error && (
+              <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-xs font-bold text-center animate-shake">
+                {error}
+              </div>
+            )}
+
+            <div className="space-y-4">
+              {!isLogin && (
+                <div className="relative group">
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
+                  <input 
+                    type="text" 
+                    placeholder="Full Name" 
+                    required
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    className="w-full bg-slate-900/50 border border-slate-800 rounded-xl py-4 pl-12 pr-4 outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/5 transition-all text-sm text-white placeholder:text-slate-600"
+                  />
+                </div>
+              )}
+
+              <div className="relative group">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
+                <input 
+                  type="email" 
+                  placeholder="Email Address" 
+                  required
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  className="w-full bg-slate-900/50 border border-slate-800 rounded-xl py-4 pl-12 pr-4 outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/5 transition-all text-sm text-white placeholder:text-slate-600"
+                />
+              </div>
+
+              <div className="relative group">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
+                <input 
+                  type="password" 
+                  placeholder="Password" 
+                  required
+                  value={formData.password}
+                  onChange={(e) => setFormData({...formData, password: e.target.value})}
+                  className="w-full bg-slate-900/50 border border-slate-800 rounded-xl py-4 pl-12 pr-4 outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/5 transition-all text-sm text-white placeholder:text-slate-600"
+                />
+              </div>
+            </div>
 
             <button 
               type="submit" 
-              className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 bg-[length:200%_auto] hover:bg-right transition-all duration-500 py-3 rounded-xl font-semibold shadow-lg shadow-indigo-500/20 active:scale-[0.98]"
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 py-4 rounded-xl font-bold text-white shadow-xl shadow-indigo-600/20 hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50"
             >
-              {isLogin ? 'Sign In' : 'Create Account'}
+              {loading ? 'Decrypting Access...' : isLogin ? 'Sign In' : 'Establish Account'}
             </button>
-          </div>
+          </form>
 
-          <div className="relative flex items-center justify-center py-2">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-800"></div>
-            </div>
-            <span className="relative px-3 bg-[#0d0d0d] text-[10px] font-bold text-slate-500 tracking-widest uppercase">Or continue with</span>
+          <div className="mt-8 text-center pt-6 border-t border-slate-800/50">
+            <p className="text-sm text-slate-500">
+              {isLogin ? "Don't have an account?" : "Already a member?"}{' '}
+              <button 
+                onClick={() => setIsLogin(!isLogin)} 
+                className="text-indigo-400 hover:text-indigo-300 font-bold transition-colors ml-1"
+              >
+                {isLogin ? 'Sign Up' : 'Sign In'}
+              </button>
+            </p>
           </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <button className="flex items-center justify-center gap-2 bg-slate-900/50 hover:bg-slate-800/80 border border-slate-800 rounded-xl py-2.5 transition-all group">
-              <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5 grayscale group-hover:grayscale-0 transition-all" />
-              <span className="text-sm font-medium text-slate-300">Google</span>
-            </button>
-            <button className="flex items-center justify-center gap-2 bg-slate-900/50 hover:bg-slate-800/80 border border-slate-800 rounded-xl py-2.5 transition-all group">
-              <img src="https://www.svgrepo.com/show/511330/apple-173.svg" alt="Apple" className="w-5 h-5 invert opacity-50 group-hover:opacity-100 transition-all" />
-              <span className="text-sm font-medium text-slate-300">Apple</span>
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <div className="mt-8 text-center space-y-6">
-        <p className="text-sm text-slate-400">
-          {isLogin ? "Don't have an account?" : "Already have an account?"}{' '}
-          <button onClick={() => setIsLogin(!isLogin)} className="text-indigo-400 hover:text-indigo-300 font-semibold transition-colors">
-            {isLogin ? 'Sign Up' : 'Sign In'}
-          </button>
-        </p>
-        <div className="flex gap-6 text-xs text-slate-600">
-          <a href="#" className="hover:text-slate-400 transition-colors">Privacy Policy</a>
-          <a href="#" className="hover:text-slate-400 transition-colors">Terms of Service</a>
         </div>
       </div>
     </div>

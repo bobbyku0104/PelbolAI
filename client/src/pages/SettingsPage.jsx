@@ -1,74 +1,74 @@
-import Sidebar from '../components/dashboard/Sidebar'
-import TopBar from '../components/dashboard/TopBar'
+import { User, Bell, Shield, Moon, Zap, ArrowLeft } from 'lucide-react'
 
-export default function SettingsPage({ onLogout, onBack, onOpenCreate }) {
+export default function SettingsPage({ onBack }) {
   return (
-    <div className="flex h-screen bg-black text-white">
-      <Sidebar 
-        onLogout={onLogout} 
-        onOpenHome={onBack} 
-        onOpenCreate={onOpenCreate}
-        onOpenRecent={() => {}}
-        onOpenGraph={() => {}}
-        onOpenSettings={() => {}}
-        activePage="Settings" 
-      />
-
-      <main className="flex-1 flex flex-col min-w-0">
-        <TopBar hideSearch />
-
-        <div className="flex-1 overflow-auto p-10 space-y-12 custom-scrollbar">
-          <div>
-            <h2 className="text-3xl font-bold mb-2">Settings</h2>
-            <p className="text-slate-400 text-sm">Manage your account preferences and workspace configuration.</p>
-          </div>
-
-          <div className="max-w-2xl space-y-8">
-            <section className="space-y-4">
-              <h3 className="text-lg font-bold border-b border-slate-800 pb-2 text-indigo-400">Account</h3>
-              <div className="grid grid-cols-2 gap-8">
-                <SettingItem label="Full Name" value="Alex Rivera" />
-                <SettingItem label="Email" value="alex@peblo.ai" />
-              </div>
-            </section>
-
-            <section className="space-y-4">
-              <h3 className="text-lg font-bold border-b border-slate-800 pb-2 text-indigo-400">Preferences</h3>
-              <div className="space-y-4">
-                <ToggleItem label="Dark Mode" enabled={true} />
-                <ToggleItem label="AI Auto-Suggestions" enabled={true} />
-                <ToggleItem label="Desktop Notifications" enabled={false} />
-              </div>
-            </section>
-
-            <section className="space-y-4">
-              <h3 className="text-lg font-bold border-b border-slate-800 pb-2 text-indigo-400">Security</h3>
-              <button className="px-6 py-2 bg-slate-900 border border-slate-800 rounded-lg text-sm font-bold hover:bg-slate-800 transition-all">
-                Change Password
-              </button>
-            </section>
-          </div>
+    <div className="h-full flex flex-col bg-[#050505] overflow-hidden">
+      {/* Header */}
+      <header className="h-20 border-b border-slate-800 flex items-center justify-between px-10">
+        <div className="flex items-center gap-4">
+          <button onClick={onBack} className="p-2 hover:bg-slate-900 rounded-lg text-slate-500 transition-colors">
+            <ArrowLeft size={20} />
+          </button>
+          <h1 className="text-xl font-bold tracking-tight text-white">Workspace Settings</h1>
         </div>
-      </main>
+      </header>
+
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto p-10 custom-scrollbar">
+        <div className="max-w-3xl mx-auto space-y-12">
+          {/* Account Section */}
+          <section className="space-y-6">
+            <div className="flex items-center gap-2 text-indigo-400">
+              <User size={18} />
+              <h2 className="font-bold text-xs uppercase tracking-[0.2em]">Account Profile</h2>
+            </div>
+            <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 grid grid-cols-2 gap-8">
+              <div>
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Full Name</p>
+                <p className="text-sm font-medium text-white">Alex Rivera</p>
+              </div>
+              <div>
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Email Address</p>
+                <p className="text-sm font-medium text-white">alex@peblo.ai</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Preferences */}
+          <section className="space-y-6">
+            <div className="flex items-center gap-2 text-purple-400">
+              <Zap size={18} />
+              <h2 className="font-bold text-xs uppercase tracking-[0.2em]">Neural Preferences</h2>
+            </div>
+            <div className="space-y-3">
+              <SettingsToggle label="Dark Luxury Mode" active />
+              <SettingsToggle label="AI Auto-Suggestions" active />
+              <SettingsToggle label="Real-time Collaboration" />
+            </div>
+          </section>
+
+          {/* Security */}
+          <section className="space-y-6">
+            <div className="flex items-center gap-2 text-emerald-400">
+              <Shield size={18} />
+              <h2 className="font-bold text-xs uppercase tracking-[0.2em]">Security Link</h2>
+            </div>
+            <button className="w-full bg-slate-900 border border-slate-800 hover:border-indigo-500/30 py-4 rounded-xl text-sm font-bold transition-all text-slate-300">
+              Change Security Password
+            </button>
+          </section>
+        </div>
+      </div>
     </div>
   )
 }
 
-function SettingItem({ label, value }) {
+function SettingsToggle({ label, active = false }) {
   return (
-    <div className="space-y-1">
-      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{label}</p>
-      <p className="text-sm font-medium">{value}</p>
-    </div>
-  )
-}
-
-function ToggleItem({ label, enabled }) {
-  return (
-    <div className="flex items-center justify-between py-2">
+    <div className="flex items-center justify-between p-4 bg-slate-900/20 border border-slate-800 rounded-xl">
       <span className="text-sm font-medium text-slate-300">{label}</span>
-      <div className={`w-10 h-5 rounded-full relative transition-all ${enabled ? 'bg-indigo-600' : 'bg-slate-800'}`}>
-        <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${enabled ? 'left-6' : 'left-1'}`}></div>
+      <div className={`w-10 h-5 rounded-full relative transition-all ${active ? 'bg-indigo-600' : 'bg-slate-800'}`}>
+        <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${active ? 'right-1' : 'left-1'}`}></div>
       </div>
     </div>
   )

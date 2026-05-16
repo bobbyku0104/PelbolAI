@@ -1,17 +1,15 @@
 import { useState, useEffect } from 'react'
-import { Check } from 'lucide-react'
-import Sidebar from '../components/dashboard/Sidebar'
+import { Check, ArrowLeft, Save, Trash2 } from 'lucide-react'
 import EditorToolbar from '../components/dashboard/EditorToolbar'
 import AIAssistantSidebar from '../components/dashboard/AIAssistantSidebar'
 
-export default function EditorPage({ onLogout, onBack, noteId }) {
+export default function EditorPage({ onBack, noteId }) {
   const [title, setTitle] = useState('Untitled Note')
   const [content, setContent] = useState('')
   const [saveStatus, setSaveStatus] = useState('idle') // idle, saving, success
 
   useEffect(() => {
     if (noteId) {
-      // Fetch existing note if editing
       const fetchNote = async () => {
         const token = localStorage.getItem('peblo_token')
         const res = await fetch(`http://localhost:5000/api/notes/${noteId}`, {
@@ -59,68 +57,73 @@ export default function EditorPage({ onLogout, onBack, noteId }) {
 
     const token = localStorage.getItem('peblo_token')
     try {
-      const response = await fetch(`http://localhost:5000/api/notes/${noteId}`, {
+      const res = await fetch(`http://localhost:5000/api/notes/${noteId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       })
-      if (response.ok) onBack()
+      if (res.ok) onBack()
     } catch (err) {
       console.error('Delete failed:', err)
     }
   }
+
   return (
-    <div className="flex h-screen bg-black text-white">
-      <Sidebar onLogout={onLogout} activePage="Recent Notes" />
-
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
-        {/* Floating Toolbar */}
-        <div className="absolute top-10 left-1/2 -translate-x-1/2 z-20">
-          <EditorToolbar />
-        </div>
-
-        {/* Scrollable Editor Area */}
-        <div className="flex-1 overflow-auto p-20 pt-32 custom-scrollbar">
-          <div className="max-w-3xl mx-auto space-y-12">
+    <div className="h-full flex bg-black text-slate-200 overflow-hidden">
+      <main className="flex-1 flex flex-col bg-[#050505] overflow-hidden">
+        {/* Editor Header */}
+        <header className="h-20 border-b border-slate-800 flex items-center justify-between px-8">
+          <div className="flex items-center gap-4">
+            <button onClick={onBack} className="p-2 hover:bg-slate-900 rounded-lg text-slate-500 transition-colors">
+              <ArrowLeft size={20} />
+            </button>
             <input 
               type="text" 
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-transparent text-5xl font-bold outline-none placeholder:text-slate-800 text-white"
-              placeholder="Note Title"
+              className="bg-transparent text-xl font-bold outline-none border-b border-transparent focus:border-indigo-500/50 transition-all px-2 py-1"
             />
-            
-            <textarea 
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              className="w-full h-[500px] bg-transparent text-slate-300 text-lg leading-relaxed outline-none resize-none placeholder:text-slate-800"
-              placeholder="Start writing your thoughts..."
-            ></textarea>
-
-            <div className="pt-20 flex gap-4">
-              <button 
-                onClick={handleDelete}
-                className="px-8 py-3 bg-slate-900 border border-slate-800 rounded-xl font-bold hover:bg-slate-800 transition-all active:scale-[0.98]"
-              >
-                {noteId ? 'Delete Note' : 'Cancel'}
-              </button>
-              <button 
-                onClick={handleSave}
-                className="px-8 py-3 bg-gradient-to-r from-indigo-500 to-indigo-400 text-black font-bold rounded-xl hover:opacity-90 transition-all active:scale-[0.98] flex items-center gap-2 min-w-[140px] justify-center"
-              >
-                {saveStatus === 'saving' ? (
-                  <span className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin"></span>
-                ) : saveStatus === 'success' ? (
-                  <><Check size={18} /> Saved</>
-                ) : (
-                  'Save Note'
-                )}
-              </button>
-            </div>
           </div>
+
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-widest mr-4">
+              {saveStatus === 'saving' ? (
+                <span className="flex gap-1"><span className="w-1 h-1 bg-indigo-500 rounded-full animate-bounce"></span><span className="w-1 h-1 bg-indigo-500 rounded-full animate-bounce delay-75"></span></span>
+              ) : saveStatus === 'success' ? (
+                <span className="text-emerald-400 flex items-center gap-1"><Check size={14} /> Saved</span>
+              ) : (
+                'All changes synced'
+              )}
+            </div>
+            <button 
+              onClick={handleSave}
+              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-lg text-sm font-bold transition-all"
+            >
+              <Save size={16} /> Save
+            </button>
+            <button 
+              onClick={handleDelete}
+              className="p-2 text-slate-600 hover:text-red-400 transition-colors"
+            >
+              <Trash2 size={18} />
+            </button>
+          </div>
+        </header>
+
+        {/* Toolbar */}
+        <EditorToolbar />
+
+        {/* Editor Area */}
+        <div className="flex-1 overflow-y-auto p-12 custom-scrollbar">
+          <textarea 
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="Start synthesizing your thoughts..."
+            className="w-full h-full bg-transparent resize-none outline-none text-lg leading-relaxed text-slate-300 placeholder:text-slate-800"
+          />
         </div>
       </main>
 
-      <AIAssistantSidebar />
+      <AIAssistantSidebar currentContext={content} />
     </div>
   )
 }

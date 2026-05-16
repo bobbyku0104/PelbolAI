@@ -8,11 +8,10 @@ const userSchema = new mongoose.Schema({
   avatar: { type: String, default: '' }
 }, { timestamps: true });
 
-// Hash password before saving
-userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
+// Modern Hash password before saving
+userSchema.pre('save', async function() {
+  if (!this.isModified('password')) return;
   this.password = await bcrypt.hash(this.password, 10);
-  next();
 });
 
 // Match password method
