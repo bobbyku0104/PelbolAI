@@ -15,7 +15,7 @@ export function SidebarLink({ icon, label, active = false }) {
   )
 }
 
-export default function Sidebar({ onLogout, onOpenGraph, onOpenHome, activePage = "Home" }) {
+export default function Sidebar({ onLogout, onOpenGraph, onOpenHome, onOpenSettings, activePage = "Home" }) {
   return (
     <aside className="w-64 border-r border-slate-800 flex flex-col bg-[#050505] p-6">
       <div className="flex items-center gap-3 mb-10">
@@ -41,7 +41,9 @@ export default function Sidebar({ onLogout, onOpenGraph, onOpenHome, activePage 
         <div onClick={onOpenGraph} className="cursor-pointer">
           <SidebarLink icon={<Grid />} label="Categories" active={activePage === "Categories"} />
         </div>
-        <SidebarLink icon={<Settings />} label="Settings" active={activePage === "Settings"} />
+        <div onClick={onOpenSettings} className="cursor-pointer">
+          <SidebarLink icon={<Settings />} label="Settings" active={activePage === "Settings"} />
+        </div>
       </nav>
 
       <button 

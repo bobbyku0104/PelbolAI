@@ -1,11 +1,21 @@
 import { Sparkles, Send } from 'lucide-react'
+import { useState, useEffect } from 'react'
 
 export default function AIAssistantSidebar() {
+  const [isTyping, setIsTyping] = useState(false)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsTyping(true), 2000)
+    const stopTimer = setTimeout(() => setIsTyping(false), 5000)
+    return () => { clearTimeout(timer); clearTimeout(stopTimer); }
+  }, [])
+
   return (
     <aside className="w-[340px] border-l border-slate-800 bg-[#050505] p-8 flex flex-col gap-8">
       <div className="flex items-center gap-2 text-indigo-400">
         <Sparkles className="w-5 h-5" />
         <h3 className="font-bold text-sm tracking-widest uppercase">AI Assistant</h3>
+        {isTyping && <span className="flex gap-1 ml-2"><span className="w-1 h-1 bg-indigo-400 rounded-full animate-bounce"></span><span className="w-1 h-1 bg-indigo-400 rounded-full animate-bounce delay-75"></span><span className="w-1 h-1 bg-indigo-400 rounded-full animate-bounce delay-150"></span></span>}
       </div>
 
       <div className="space-y-4">

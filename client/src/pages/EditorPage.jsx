@@ -1,8 +1,20 @@
+import { useState } from 'react'
+import { Check } from 'lucide-react'
 import Sidebar from '../components/dashboard/Sidebar'
 import EditorToolbar from '../components/dashboard/EditorToolbar'
 import AIAssistantSidebar from '../components/dashboard/AIAssistantSidebar'
 
 export default function EditorPage({ onLogout, onBack }) {
+  const [isSaving, setIsSaving] = useState(false)
+  const [saveStatus, setSaveStatus] = useState('idle') // idle, saving, success
+
+  const handleSave = () => {
+    setSaveStatus('saving')
+    setTimeout(() => {
+      setSaveStatus('success')
+      setTimeout(() => setSaveStatus('idle'), 2000)
+    }, 1500)
+  }
   return (
     <div className="flex h-screen bg-black text-white">
       <Sidebar onLogout={onLogout} activePage="Recent Notes" />
@@ -63,8 +75,17 @@ export default function EditorPage({ onLogout, onBack }) {
               >
                 Delete Note
               </button>
-              <button className="px-8 py-3 bg-gradient-to-r from-indigo-500 to-indigo-400 text-black font-bold rounded-xl hover:opacity-90 transition-all active:scale-[0.98]">
-                Save Note
+              <button 
+                onClick={handleSave}
+                className="px-8 py-3 bg-gradient-to-r from-indigo-500 to-indigo-400 text-black font-bold rounded-xl hover:opacity-90 transition-all active:scale-[0.98] flex items-center gap-2 min-w-[140px] justify-center"
+              >
+                {saveStatus === 'saving' ? (
+                  <span className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin"></span>
+                ) : saveStatus === 'success' ? (
+                  <><Check size={18} /> Saved</>
+                ) : (
+                  'Save Note'
+                )}
               </button>
             </div>
           </div>
