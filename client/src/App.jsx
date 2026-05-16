@@ -5,6 +5,7 @@ import DashboardPage from './pages/DashboardPage'
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isLogin, setIsLogin] = useState(true)
+  const [view, setView] = useState('dashboard') // 'dashboard' or 'editor'
 
   const handleAuth = (e) => {
     e.preventDefault()
@@ -13,18 +14,21 @@ function App() {
 
   const handleLogout = () => {
     setIsLoggedIn(false)
+    setView('dashboard')
   }
 
   return (
     <>
-      {isLoggedIn ? (
-        <DashboardPage onLogout={handleLogout} />
-      ) : (
+      {!isLoggedIn ? (
         <AuthPage 
           isLogin={isLogin} 
           setIsLogin={setIsLogin} 
           onAuth={handleAuth} 
         />
+      ) : view === 'dashboard' ? (
+        <DashboardPage onLogout={handleLogout} onOpenNote={() => setView('editor')} />
+      ) : (
+        <EditorPage onLogout={handleLogout} onBack={() => setView('dashboard')} />
       )}
     </>
   )
