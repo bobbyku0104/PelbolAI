@@ -7,18 +7,60 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Dependencies
+node_modules/
+client/node_modules/
+backend/node_modules/
 
-# Editor directories and files
+# Production
+dist/
+dist-ssr/
+client/dist/
+
+# Env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env*
+
+# OS Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Testing
+coverage/
+.nyc_output/
+
+# Editor/IDE
 .vscode/*
 !.vscode/extensions.json
-.idea
-.DS_Store
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+.classpath
+.project
+.settings/
+
+# Misc
+.cache/
+.eslintcache
+.stylelintcache
+.parcel-cache/
+.next/
+.nuxt/
+
+# Packed packages
+*.tgz
+*.tar.gz
+*.zip
+
+# Package Lock Files (Optional - uncomment if you want to ignore them)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
