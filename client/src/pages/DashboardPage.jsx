@@ -1,4 +1,4 @@
-import { FileText, Share2, Target, Layout, FlaskConical, Plus } from 'lucide-react'
+import { FileText, Share2, Target, Layout, FlaskConical, Plus, Grid } from 'lucide-react'
 import Sidebar from '../components/dashboard/Sidebar'
 import TopBar from '../components/dashboard/TopBar'
 import StatsCard from '../components/dashboard/StatsCard'
