@@ -1,6 +1,43 @@
+import { useState } from 'react'
 import { Mail, Lock, Eye, User, Bot } from 'lucide-react'
 
 export default function AuthPage({ isLogin, setIsLogin, onAuth }) {
+  const [formData, setFormData] = useState({ name: '', email: '', password: '' })
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError('')
+    setLoading(true)
+
+    const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register'
+    
+    try {
+      const response = await fetch(`http://localhost:5000${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Authentication failed')
+      }
+
+      // Save token to localStorage
+      localStorage.setItem('peblo_token', data.token)
+      localStorage.setItem('peblo_user', JSON.stringify(data))
+      
+      onAuth(e) // Proceed to dashboard
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
       {/* Branding Header */}
@@ -26,42 +63,18 @@ export default function AuthPage({ isLogin, setIsLogin, onAuth }) {
                   type="text" 
                   placeholder="John Doe" 
                   className="w-full bg-slate-900/50 border border-slate-700/50 rounded-xl py-3 pl-10 pr-4 outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 transition-all placeholder:text-slate-600 text-slate-200" 
-                />
-              </div>
+            <div className="relative group">
+              <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
+              <input 
+                type="text" 
+                placeholder="Full Name" 
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                className="w-full bg-slate-900 border border-slate-800 rounded-xl py-3 pl-11 pr-4 outline-none focus:border-indigo-500 transition-all text-sm"
+              />
             </div>
           )}
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-300 ml-1">Email Address</label>
-            <div className="relative group">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
-              <input 
-                type="email" 
-                placeholder="name@company.com" 
-                className="w-full bg-slate-900/50 border border-slate-700/50 rounded-xl py-3 pl-10 pr-4 outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 transition-all placeholder:text-slate-600 text-slate-200" 
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <div className="flex justify-between items-center px-1">
-              <label className="text-sm font-medium text-slate-300">Password</label>
-              {isLogin && <a href="#" className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors font-medium">Forgot password?</a>}
-            </div>
-            <div className="relative group">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
-              <input 
-                type="password" 
-                placeholder="••••••••" 
-                className="w-full bg-slate-900/50 border border-slate-700/50 rounded-xl py-3 pl-10 pr-10 outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 transition-all placeholder:text-slate-600 text-slate-200" 
-              />
-              <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors">
-                <Eye className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-
-          <div className="pt-2">
             <button 
               type="submit" 
               className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 bg-[length:200%_auto] hover:bg-right transition-all duration-500 py-3 rounded-xl font-semibold shadow-lg shadow-indigo-500/20 active:scale-[0.98]"

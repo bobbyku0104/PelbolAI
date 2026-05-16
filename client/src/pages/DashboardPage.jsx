@@ -1,5 +1,5 @@
 import { FileText, Share2, Target, Layout, FlaskConical, Plus, Grid, Search } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Sidebar from '../components/dashboard/Sidebar'
 import TopBar from '../components/dashboard/TopBar'
@@ -38,6 +38,15 @@ const INITIAL_NOTES = [
 
 export default function DashboardPage({ onLogout, onOpenNote, onOpenGraph, onOpenSettings, onOpenRecent, onOpenCreate }) {
   const [searchQuery, setSearchQuery] = useState('')
+  const [backendMessage, setBackendMessage] = useState('Connecting...')
+
+  useEffect(() => {
+    fetch('http://localhost:5000/api/test')
+      .then(res => res.json())
+      .then(data => setBackendMessage(data.message))
+      .catch(err => setBackendMessage('Backend Offline ❌'));
+  }, [])
+
   const filteredNotes = INITIAL_NOTES.filter(note => 
     note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     note.description.toLowerCase().includes(searchQuery.toLowerCase())
@@ -89,7 +98,13 @@ export default function DashboardPage({ onLogout, onOpenNote, onOpenGraph, onOpe
         <div className="flex-1 overflow-auto p-10 space-y-12 custom-scrollbar">
           {/* Welcome Header */}
           <div>
-            <h2 className="text-3xl font-bold mb-2 tracking-tight">Welcome back, <span className="text-indigo-400">Alex.</span></h2>
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-3xl font-bold tracking-tight">Welcome back, <span className="text-indigo-400">Alex.</span></h2>
+              <div className="bg-slate-900 border border-slate-800 px-3 py-1 rounded-full flex items-center gap-2">
+                <div className={`w-2 h-2 rounded-full ${backendMessage.includes('Offline') ? 'bg-red-500' : 'bg-green-500 animate-pulse'}`}></div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{backendMessage}</span>
+              </div>
+            </div>
             <p className="text-slate-400 text-sm">Your workspace is synced. AI has identified 3 new insights from your shared assets today.</p>
           </div>
           
