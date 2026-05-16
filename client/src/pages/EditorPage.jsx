@@ -1,19 +1,56 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Check } from 'lucide-react'
 import Sidebar from '../components/dashboard/Sidebar'
 import EditorToolbar from '../components/dashboard/EditorToolbar'
 import AIAssistantSidebar from '../components/dashboard/AIAssistantSidebar'
 
-export default function EditorPage({ onLogout, onBack }) {
-  const [isSaving, setIsSaving] = useState(false)
+export default function EditorPage({ onLogout, onBack, noteId }) {
+  const [title, setTitle] = useState('Untitled Note')
+  const [content, setContent] = useState('')
   const [saveStatus, setSaveStatus] = useState('idle') // idle, saving, success
 
-  const handleSave = () => {
+  useEffect(() => {
+    if (noteId) {
+      // Fetch existing note if editing
+      const fetchNote = async () => {
+        const token = localStorage.getItem('peblo_token')
+        const res = await fetch(`http://localhost:5000/api/notes/${noteId}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+        const data = await res.json()
+        if (res.ok) {
+          setTitle(data.title)
+          setContent(data.content)
+        }
+      }
+      fetchNote()
+    }
+  }, [noteId])
+
+  const handleSave = async () => {
     setSaveStatus('saving')
-    setTimeout(() => {
-      setSaveStatus('success')
-      setTimeout(() => setSaveStatus('idle'), 2000)
-    }, 1500)
+    const token = localStorage.getItem('peblo_token')
+    const method = noteId ? 'PUT' : 'POST'
+    const endpoint = noteId ? `http://localhost:5000/api/notes/${noteId}` : 'http://localhost:5000/api/notes'
+
+    try {
+      const response = await fetch(endpoint, {
+        method,
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ title, content })
+      })
+
+      if (response.ok) {
+        setSaveStatus('success')
+        setTimeout(() => setSaveStatus('idle'), 2000)
+      }
+    } catch (err) {
+      console.error('Save failed:', err)
+      setSaveStatus('idle')
+    }
   }
   return (
     <div className="flex h-screen bg-black text-white">
@@ -28,45 +65,20 @@ export default function EditorPage({ onLogout, onBack }) {
         {/* Scrollable Editor Area */}
         <div className="flex-1 overflow-auto p-20 pt-32 custom-scrollbar">
           <div className="max-w-3xl mx-auto space-y-12">
-            <h1 className="text-6xl font-bold tracking-tight leading-tight">
-              The Future of Neural Synthesis
-            </h1>
+            <input 
+              type="text" 
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full bg-transparent text-5xl font-bold outline-none placeholder:text-slate-800 text-white"
+              placeholder="Note Title"
+            />
             
-            <div className="prose prose-invert max-w-none space-y-8 text-slate-300 text-lg leading-relaxed">
-              <p>
-                In the quiet corners of the digital architecture, a new form of cognitive resonance is 
-                beginning to emerge. This isn't merely the simulation of intelligence, but an architectural 
-                synthesis of pattern and intent—a neural canvas that bridges the gap between raw 
-                data and human intuition.
-              </p>
-              
-              <p>
-                We are standing at the precipice of "Quiet Productivity," where tools no longer shout 
-                for attention but whisper insights. The glassmorphic interface of our current workspace 
-                reflects this philosophy: translucent, layered, and deep. It invites focus through 
-                atmospheric clarity rather than mechanical rigidity.
-              </p>
-
-              <div className="border-l-2 border-indigo-500 pl-8 py-2 my-12">
-                <p className="text-2xl font-medium text-white italic">
-                  "Complexity is the noise; synthesis is the signal."
-                </p>
-              </div>
-
-              <p>
-                The synthesis occurs in the transition layers. When we write, we aren't just recording 
-                strings of characters; we are training a distributed consciousness to understand our 
-                creative velocity. The AI doesn't replace the writer; it provides the gravitational pull 
-                that keeps the ideas in orbit.
-              </p>
-              
-              <p>
-                As we move forward, the boundaries between the tool and the thought will continue to 
-                blur. The editor becomes an extension of the nervous system—a reactive, glowing 
-                medium that anticipates the next logical leap in human reasoning. This is the promise 
-                of Peblo AI: the refinement of complexity into pure, actionable brilliance.
-              </p>
-            </div>
+            <textarea 
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              className="w-full h-[500px] bg-transparent text-slate-300 text-lg leading-relaxed outline-none resize-none placeholder:text-slate-800"
+              placeholder="Start writing your thoughts..."
+            ></textarea>
 
             <div className="pt-20 flex gap-4">
               <button 

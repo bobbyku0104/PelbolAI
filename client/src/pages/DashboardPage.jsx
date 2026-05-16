@@ -39,17 +39,34 @@ const INITIAL_NOTES = [
 export default function DashboardPage({ onLogout, onOpenNote, onOpenGraph, onOpenSettings, onOpenRecent, onOpenCreate }) {
   const [searchQuery, setSearchQuery] = useState('')
   const [backendMessage, setBackendMessage] = useState('Connecting...')
+  const [notes, setNotes] = useState([])
 
   useEffect(() => {
+    // 1. Check Backend Connectivity
     fetch('http://localhost:5000/api/test')
       .then(res => res.json())
       .then(data => setBackendMessage(data.message))
       .catch(err => setBackendMessage('Backend Offline ❌'));
+
+    // 2. Fetch User Notes
+    const fetchNotes = async () => {
+      try {
+        const token = localStorage.getItem('peblo_token')
+        const response = await fetch('http://localhost:5000/api/notes', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+        const data = await response.json()
+        if (response.ok) setNotes(data)
+      } catch (err) {
+        console.error('Failed to fetch notes:', err)
+      }
+    }
+    fetchNotes()
   }, [])
 
-  const filteredNotes = INITIAL_NOTES.filter(note => 
+  const filteredNotes = notes.filter(note => 
     note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    note.description.toLowerCase().includes(searchQuery.toLowerCase())
+    (note.content && note.content.toLowerCase().includes(searchQuery.toLowerCase()))
   )
 
   return (
