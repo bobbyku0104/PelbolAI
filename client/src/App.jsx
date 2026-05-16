@@ -12,10 +12,26 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isLogin, setIsLogin] = useState(true)
   const [view, setView] = useState('dashboard') // 'dashboard', 'editor', 'graph', 'settings', or 'recent-notes'
+  const [selectedNoteId, setSelectedNoteId] = useState(null)
+
+  useEffect(() => {
+    const token = localStorage.getItem('peblo_token')
+    if (token) setIsLoggedIn(true)
+  }, [])
 
   const handleAuth = (e) => {
     e.preventDefault()
     setIsLoggedIn(true)
+  }
+
+  const handleOpenNote = (id) => {
+    setSelectedNoteId(id)
+    setView('editor')
+  }
+
+  const handleCreateNote = () => {
+    setSelectedNoteId(null)
+    setView('editor')
   }
 
   const handleLogout = () => {
@@ -59,20 +75,20 @@ function App() {
           {view === 'dashboard' ? (
             <DashboardPage 
               onLogout={handleLogout} 
-              onOpenNote={() => setView('editor')} 
+              onOpenNote={handleOpenNote} 
               onOpenGraph={() => setView('graph')} 
               onOpenSettings={() => setView('settings')}
               onOpenRecent={() => setView('recent-notes')}
-              onOpenCreate={() => setView('editor')}
+              onOpenCreate={handleCreateNote}
             />
           ) : view === 'graph' ? (
-            <GraphPage onLogout={handleLogout} onBack={() => setView('dashboard')} onOpenCreate={() => setView('editor')} />
+            <GraphPage onLogout={handleLogout} onBack={() => setView('dashboard')} onOpenCreate={handleCreateNote} />
           ) : view === 'settings' ? (
-            <SettingsPage onLogout={handleLogout} onBack={() => setView('dashboard')} onOpenCreate={() => setView('editor')} />
+            <SettingsPage onLogout={handleLogout} onBack={() => setView('dashboard')} onOpenCreate={handleCreateNote} />
           ) : view === 'recent-notes' ? (
-            <RecentNotesPage onLogout={handleLogout} onBack={() => setView('dashboard')} onOpenNote={() => setView('editor')} onOpenCreate={() => setView('editor')} />
+            <RecentNotesPage onLogout={handleLogout} onBack={() => setView('dashboard')} onOpenNote={handleOpenNote} onOpenCreate={handleCreateNote} />
           ) : (
-            <EditorPage onLogout={handleLogout} onBack={() => setView('dashboard')} />
+            <EditorPage onLogout={handleLogout} onBack={() => setView('dashboard')} noteId={selectedNoteId} />
           )}
         </motion.div>
       )}
