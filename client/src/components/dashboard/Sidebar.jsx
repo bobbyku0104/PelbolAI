@@ -15,7 +15,7 @@ export function SidebarLink({ icon, label, active = false }) {
   )
 }
 
-export default function Sidebar({ onLogout, onOpenGraph, onOpenHome, onOpenSettings, activePage = "Home" }) {
+export default function Sidebar({ onLogout, onOpenGraph, onOpenHome, onOpenSettings, onOpenRecent, onOpenCreate, activePage = "Home" }) {
   return (
     <aside className="w-64 border-r border-slate-800 flex flex-col bg-[#050505] p-6">
       <div className="flex items-center gap-3 mb-10">
@@ -28,7 +28,10 @@ export default function Sidebar({ onLogout, onOpenGraph, onOpenHome, onOpenSetti
         </div>
       </div>
 
-      <button className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-indigo-600 to-purple-600 py-3 rounded-xl font-semibold shadow-lg shadow-indigo-500/20 mb-10 hover:opacity-90 transition-all active:scale-[0.98]">
+      <button 
+        onClick={onOpenCreate}
+        className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-indigo-600 to-purple-600 py-3 rounded-xl font-semibold shadow-lg shadow-indigo-500/20 mb-10 hover:opacity-90 transition-all active:scale-[0.98]"
+      >
         <Plus className="w-5 h-5" />
         <span>Create Note</span>
       </button>
@@ -37,7 +40,9 @@ export default function Sidebar({ onLogout, onOpenGraph, onOpenHome, onOpenSetti
         <div onClick={onOpenHome} className="cursor-pointer">
           <SidebarLink icon={<Home />} label="Home" active={activePage === "Home"} />
         </div>
-        <SidebarLink icon={<Clock />} label="Recent Notes" active={activePage === "Recent Notes"} />
+        <div onClick={onOpenRecent} className="cursor-pointer">
+          <SidebarLink icon={<Clock />} label="Recent Notes" active={activePage === "Recent Notes"} />
+        </div>
         <div onClick={onOpenGraph} className="cursor-pointer">
           <SidebarLink icon={<Grid />} label="Categories" active={activePage === "Categories"} />
         </div>

@@ -2,10 +2,18 @@ import { Search, Bell, Bot, Share2, Sparkles, Maximize2, ZoomIn, ZoomOut, AlertC
 import Sidebar from '../components/dashboard/Sidebar'
 import CategorySidebar from '../components/dashboard/CategorySidebar'
 
-export default function GraphPage({ onLogout, onBack }) {
+export default function GraphPage({ onLogout, onBack, onOpenCreate }) {
   return (
     <div className="flex h-screen bg-black text-white overflow-hidden">
-      <Sidebar onLogout={onLogout} onOpenHome={onBack} activePage="Categories" />
+      <Sidebar 
+        onLogout={onLogout} 
+        onOpenHome={onBack} 
+        onOpenCreate={onOpenCreate}
+        onOpenRecent={() => {}} 
+        onOpenGraph={() => {}} 
+        onOpenSettings={() => {}}
+        activePage="Categories" 
+      />
 
       <main className="flex-1 flex flex-col min-w-0 relative">
         {/* Top Navigation Bar */}

@@ -5,12 +5,13 @@ import DashboardPage from './pages/DashboardPage'
 import EditorPage from './pages/EditorPage'
 import GraphPage from './pages/GraphPage'
 import SettingsPage from './pages/SettingsPage'
+import RecentNotesPage from './pages/RecentNotesPage'
 import './index.css'
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isLogin, setIsLogin] = useState(true)
-  const [view, setView] = useState('dashboard') // 'dashboard', 'editor', 'graph', or 'settings'
+  const [view, setView] = useState('dashboard') // 'dashboard', 'editor', 'graph', 'settings', or 'recent-notes'
 
   const handleAuth = (e) => {
     e.preventDefault()
@@ -61,11 +62,15 @@ function App() {
               onOpenNote={() => setView('editor')} 
               onOpenGraph={() => setView('graph')} 
               onOpenSettings={() => setView('settings')}
+              onOpenRecent={() => setView('recent-notes')}
+              onOpenCreate={() => setView('editor')}
             />
           ) : view === 'graph' ? (
-            <GraphPage onLogout={handleLogout} onBack={() => setView('dashboard')} />
+            <GraphPage onLogout={handleLogout} onBack={() => setView('dashboard')} onOpenCreate={() => setView('editor')} />
           ) : view === 'settings' ? (
-            <SettingsPage onLogout={handleLogout} onBack={() => setView('dashboard')} />
+            <SettingsPage onLogout={handleLogout} onBack={() => setView('dashboard')} onOpenCreate={() => setView('editor')} />
+          ) : view === 'recent-notes' ? (
+            <RecentNotesPage onLogout={handleLogout} onBack={() => setView('dashboard')} onOpenNote={() => setView('editor')} onOpenCreate={() => setView('editor')} />
           ) : (
             <EditorPage onLogout={handleLogout} onBack={() => setView('dashboard')} />
           )}

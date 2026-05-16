@@ -1,10 +1,18 @@
 import Sidebar from '../components/dashboard/Sidebar'
 import TopBar from '../components/dashboard/TopBar'
 
-export default function SettingsPage({ onLogout, onBack }) {
+export default function SettingsPage({ onLogout, onBack, onOpenCreate }) {
   return (
     <div className="flex h-screen bg-black text-white">
-      <Sidebar onLogout={onLogout} onOpenHome={onBack} activePage="Settings" />
+      <Sidebar 
+        onLogout={onLogout} 
+        onOpenHome={onBack} 
+        onOpenCreate={onOpenCreate}
+        onOpenRecent={() => {}}
+        onOpenGraph={() => {}}
+        onOpenSettings={() => {}}
+        activePage="Settings" 
+      />
 
       <main className="flex-1 flex flex-col min-w-0">
         <TopBar hideSearch />

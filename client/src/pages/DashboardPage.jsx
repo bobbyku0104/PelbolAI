@@ -7,6 +7,7 @@ import StatsCard from '../components/dashboard/StatsCard'
 import AISuggestionCard from '../components/dashboard/AISuggestionCard'
 import NoteCard from '../components/dashboard/NoteCard'
 import ActivitySidebar from '../components/dashboard/ActivitySidebar'
+import MobileNav from '../components/dashboard/MobileNav'
 
 const INITIAL_NOTES = [
   {
@@ -35,7 +36,7 @@ const INITIAL_NOTES = [
   }
 ]
 
-export default function DashboardPage({ onLogout, onOpenNote, onOpenGraph, onOpenSettings }) {
+export default function DashboardPage({ onLogout, onOpenNote, onOpenGraph, onOpenSettings, onOpenRecent, onOpenCreate }) {
   const [searchQuery, setSearchQuery] = useState('')
   const filteredNotes = INITIAL_NOTES.filter(note => 
     note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -43,13 +44,29 @@ export default function DashboardPage({ onLogout, onOpenNote, onOpenGraph, onOpe
   )
 
   return (
-    <div className="flex h-screen bg-black text-white">
-      <Sidebar 
-        onLogout={onLogout} 
-        onOpenGraph={onOpenGraph} 
-        onOpenHome={() => {}} 
+    <div className="flex flex-col md:flex-row h-screen bg-black text-white">
+      {/* Desktop Sidebar */}
+      <div className="hidden md:flex h-full">
+        <Sidebar 
+          onLogout={onLogout} 
+          onOpenGraph={onOpenGraph} 
+          onOpenHome={() => {}} 
+          onOpenSettings={onOpenSettings}
+          onOpenRecent={onOpenRecent}
+          onOpenCreate={onOpenCreate}
+          activePage="Home" 
+        />
+      </div>
+
+      {/* Mobile Nav */}
+      <MobileNav 
+        onLogout={onLogout}
+        onOpenGraph={onOpenGraph}
+        onOpenHome={() => {}}
         onOpenSettings={onOpenSettings}
-        activePage="Home" 
+        onOpenRecent={onOpenRecent}
+        onOpenCreate={onOpenCreate}
+        activePage="Home"
       />
 
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
@@ -124,6 +141,7 @@ export default function DashboardPage({ onLogout, onOpenNote, onOpenGraph, onOpe
                 
                 {/* New Note Placeholder Card */}
                 <motion.div 
+                  onClick={onOpenCreate}
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   whileHover={{ scale: 1.02 }}
