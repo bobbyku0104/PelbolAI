@@ -7,14 +7,11 @@ export default function RecentNotesPage({ onOpenNote }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetchNotes = async () => {
+    const fetchNotes = () => {
       try {
-        const token = localStorage.getItem('peblo_token')
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/notes`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        })
-        const data = await res.json()
-        if (res.ok) setNotes(data)
+        const stored = localStorage.getItem('peblo_notes');
+        const data = stored ? JSON.parse(stored) : [];
+        setNotes(data.sort((a,b) => new Date(b.updatedAt) - new Date(a.updatedAt)));
       } catch (err) {
         console.error('Fetch failed:', err)
       } finally {

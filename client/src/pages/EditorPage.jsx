@@ -10,60 +10,59 @@ export default function EditorPage({ onBack, noteId }) {
 
   useEffect(() => {
     if (noteId) {
-      const fetchNote = async () => {
-        const token = localStorage.getItem('peblo_token')
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/notes/${noteId}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        })
-        const data = await res.json()
-        if (res.ok) {
-          setTitle(data.title)
-          setContent(data.content)
+      const fetchNote = () => {
+        const stored = localStorage.getItem('peblo_notes');
+        const data = stored ? JSON.parse(stored) : [];
+        const note = data.find(n => n._id === noteId);
+        if (note) {
+          setTitle(note.title)
+          setContent(note.content)
         }
       }
       fetchNote()
     }
   }, [noteId])
 
-  const handleSave = async () => {
+  const handleSave = () => {
     setSaveStatus('saving')
-    const token = localStorage.getItem('peblo_token')
-    const method = noteId ? 'PUT' : 'POST'
-    const endpoint = noteId ? `${import.meta.env.VITE_API_URL}/api/notes/${noteId}` : `${import.meta.env.VITE_API_URL}/api/notes`
-
     try {
-      const response = await fetch(endpoint, {
-        method,
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ title, content })
-      })
-
-      if (response.ok) {
-        setSaveStatus('success')
-        setTitle('Untitled Note')
-        setContent('')
-        setTimeout(() => setSaveStatus('idle'), 2000)
+      const stored = localStorage.getItem('peblo_notes');
+      let data = stored ? JSON.parse(stored) : [];
+      
+      if (noteId) {
+        data = data.map(n => n._id === noteId ? { ...n, title, content, updatedAt: new Date() } : n);
+      } else {
+        const newNote = {
+          _id: 'note_' + Date.now(),
+          title,
+          content,
+          updatedAt: new Date(),
+          category: 'General'
+        };
+        data.push(newNote);
       }
+      
+      localStorage.setItem('peblo_notes', JSON.stringify(data));
+      setSaveStatus('success')
+      setTitle('Untitled Note')
+      setContent('')
+      setTimeout(() => setSaveStatus('idle'), 2000)
     } catch (err) {
       console.error('Save failed:', err)
       setSaveStatus('idle')
     }
   }
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!noteId) return onBack()
     if (!window.confirm('Are you sure you want to delete this note?')) return
-
-    const token = localStorage.getItem('peblo_token')
+    
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/notes/${noteId}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      })
-      if (res.ok) onBack()
+      const stored = localStorage.getItem('peblo_notes');
+      let data = stored ? JSON.parse(stored) : [];
+      data = data.filter(n => n._id !== noteId);
+      localStorage.setItem('peblo_notes', JSON.stringify(data));
+      onBack()
     } catch (err) {
       console.error('Delete failed:', err)
     }
