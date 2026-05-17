@@ -12,7 +12,7 @@ export default function EditorPage({ onBack, noteId }) {
     if (noteId) {
       const fetchNote = async () => {
         const token = localStorage.getItem('peblo_token')
-        const res = await fetch(`http://localhost:5000/api/notes/${noteId}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/notes/${noteId}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         })
         const data = await res.json()
@@ -29,7 +29,7 @@ export default function EditorPage({ onBack, noteId }) {
     setSaveStatus('saving')
     const token = localStorage.getItem('peblo_token')
     const method = noteId ? 'PUT' : 'POST'
-    const endpoint = noteId ? `http://localhost:5000/api/notes/${noteId}` : 'http://localhost:5000/api/notes'
+    const endpoint = noteId ? `${import.meta.env.VITE_API_URL}/api/notes/${noteId}` : `${import.meta.env.VITE_API_URL}/api/notes`
 
     try {
       const response = await fetch(endpoint, {
@@ -59,7 +59,7 @@ export default function EditorPage({ onBack, noteId }) {
 
     const token = localStorage.getItem('peblo_token')
     try {
-      const res = await fetch(`http://localhost:5000/api/notes/${noteId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/notes/${noteId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       })

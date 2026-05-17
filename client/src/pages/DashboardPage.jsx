@@ -13,7 +13,7 @@ export default function DashboardPage({ onOpenNote }) {
   const [notes, setNotes] = useState([])
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/test')
+    fetch(`${import.meta.env.VITE_API_URL}/api/test`)
       .then(res => res.json())
       .then(data => setBackendMessage(data.message))
       .catch(() => setBackendMessage('Backend Offline ❌'));
@@ -21,7 +21,7 @@ export default function DashboardPage({ onOpenNote }) {
     const fetchNotes = async () => {
       try {
         const token = localStorage.getItem('peblo_token')
-        const response = await fetch('http://localhost:5000/api/notes', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/notes`, {
           headers: { 'Authorization': `Bearer ${token}` }
         })
         const data = await response.json()

@@ -10,7 +10,7 @@ export default function RecentNotesPage({ onOpenNote }) {
     const fetchNotes = async () => {
       try {
         const token = localStorage.getItem('peblo_token')
-        const res = await fetch('http://localhost:5000/api/notes', {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/notes`, {
           headers: { 'Authorization': `Bearer ${token}` }
         })
         const data = await res.json()
