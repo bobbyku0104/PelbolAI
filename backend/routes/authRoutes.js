@@ -3,28 +3,24 @@ const router = express.Router();
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
-// Simple "Open" Login/Register Route
+// Simple "Open" Login/Register Route (No Database Check)
 router.post('/login', async (req, res) => {
   try {
-    const { email, name, password } = req.body;
+    const { email, name } = req.body;
     
-    // Find user or create if not exists
-    let user = await User.findOne({ email });
+    // Fake user object to bypass MongoDB completely
+    const fakeUser = {
+      _id: 'mock_user_123',
+      name: name || email.split('@')[0],
+      email: email
+    };
 
-    if (!user) {
-      user = await User.create({ 
-        name: name || email.split('@')[0], 
-        email, 
-        password: password || 'nopassword' 
-      });
-    }
-
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+    const token = jwt.sign({ id: fakeUser._id }, process.env.JWT_SECRET || 'secret', { expiresIn: '30d' });
     
     res.json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
+      _id: fakeUser._id,
+      name: fakeUser.name,
+      email: fakeUser.email,
       token
     });
   } catch (error) {
@@ -32,26 +28,24 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Alias register to login for simplicity
+// Alias register to login for simplicity (No Database Check)
 router.post('/register', async (req, res) => {
   try {
-    const { email, name, password } = req.body;
-    let user = await User.findOne({ email });
+    const { email, name } = req.body;
+    
+    // Fake user object to bypass MongoDB completely
+    const fakeUser = {
+      _id: 'mock_user_123',
+      name: name || email.split('@')[0],
+      email: email
+    };
 
-    if (user) return res.status(400).json({ message: 'User already exists, just sign in!' });
-
-    user = await User.create({ 
-      name, 
-      email, 
-      password 
-    });
-
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+    const token = jwt.sign({ id: fakeUser._id }, process.env.JWT_SECRET || 'secret', { expiresIn: '30d' });
     
     res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
+      _id: fakeUser._id,
+      name: fakeUser.name,
+      email: fakeUser.email,
       token
     });
   } catch (error) {
