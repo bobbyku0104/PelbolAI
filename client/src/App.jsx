@@ -85,15 +85,17 @@ export default function App() {
   return (
     <div className="flex flex-col md:flex-row h-screen bg-black overflow-hidden">
       {/* Global Navigation Sidebar */}
-      <Sidebar 
-        activePage={activeLabel}
-        onLogout={handleLogout}
-        onOpenHome={() => setView('dashboard')}
-        onOpenRecent={() => setView('recent-notes')}
-        onOpenGraph={() => setView('graph')}
-        onOpenSettings={() => setView('settings')}
-        onOpenCreate={handleCreateNote}
-      />
+      <div className="hidden md:flex shrink-0">
+        <Sidebar 
+          activePage={activeLabel}
+          onLogout={handleLogout}
+          onOpenHome={() => setView('dashboard')}
+          onOpenRecent={() => setView('recent-notes')}
+          onOpenGraph={() => setView('graph')}
+          onOpenSettings={() => setView('settings')}
+          onOpenCreate={handleCreateNote}
+        />
+      </div>
 
       <MobileNav 
         activePage={activeLabel}

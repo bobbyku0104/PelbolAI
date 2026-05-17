@@ -40,18 +40,15 @@ export default function MobileNav({ onLogout, onOpenGraph, onOpenHome, onOpenSet
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
               className="fixed top-0 left-0 bottom-0 w-72 bg-black border-r border-slate-800 z-[70]"
             >
-              <div className="p-6 flex flex-col h-full">
-                <div className="flex items-center justify-between mb-10">
-                  <div className="flex items-center gap-2">
-                    <Bot className="w-6 h-6 text-indigo-400" />
-                    <span className="font-bold text-lg tracking-tight">Peblo AI</span>
-                  </div>
-                  <button onClick={() => setIsOpen(false)} className="text-slate-500 hover:text-white">
-                    <X size={24} />
-                  </button>
-                </div>
+              <div className="flex flex-col h-full relative">
+                <button 
+                  onClick={() => setIsOpen(false)} 
+                  className="absolute top-6 right-6 text-slate-500 hover:text-white z-50 bg-black/50 p-2 rounded-full"
+                >
+                  <X size={24} />
+                </button>
 
-                <div onClick={() => setIsOpen(false)}>
+                <div onClick={() => setIsOpen(false)} className="flex-1 h-full">
                   <Sidebar 
                     onLogout={onLogout}
                     onOpenGraph={onOpenGraph}

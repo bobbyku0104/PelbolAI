@@ -17,7 +17,7 @@ export function SidebarLink({ icon, label, active = false }) {
 
 export default function Sidebar({ onLogout, onOpenGraph, onOpenHome, onOpenSettings, onOpenRecent, onOpenCreate, activePage = "Home" }) {
   return (
-    <aside className="w-64 border-r border-slate-800 hidden md:flex flex-col bg-[#050505] p-6">
+    <aside className="w-64 border-r border-slate-800 flex flex-col bg-[#050505] p-6 h-full shrink-0">
       <div className="flex items-center gap-3 mb-10">
         <div className="bg-indigo-600/20 p-2 rounded-lg border border-indigo-500/30">
           <Bot className="w-6 h-6 text-indigo-400" />
