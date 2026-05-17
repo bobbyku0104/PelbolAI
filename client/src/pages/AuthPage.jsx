@@ -11,30 +11,21 @@ export default function AuthPage({ isLogin, setIsLogin, onAuth }) {
     setError('')
     setLoading(true)
 
-    const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register'
-    
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}${endpoint}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Authentication failed')
+    // Frontend-only fake authentication (No backend checking)
+    setTimeout(() => {
+      const fakeData = {
+        token: 'fake_local_token_123',
+        name: formData.name || formData.email.split('@')[0],
+        email: formData.email,
+        _id: 'fake_user_123'
       }
 
-      localStorage.setItem('peblo_token', data.token)
-      localStorage.setItem('peblo_user', JSON.stringify(data))
+      localStorage.setItem('peblo_token', fakeData.token)
+      localStorage.setItem('peblo_user', JSON.stringify(fakeData))
       
       onAuth(e)
-    } catch (err) {
-      setError(err.message)
-    } finally {
       setLoading(false)
-    }
+    }, 500)
   }
 
   return (
