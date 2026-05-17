@@ -43,6 +43,8 @@ export default function EditorPage({ onBack, noteId }) {
 
       if (response.ok) {
         setSaveStatus('success')
+        setTitle('Untitled Note')
+        setContent('')
         setTimeout(() => setSaveStatus('idle'), 2000)
       }
     } catch (err) {
