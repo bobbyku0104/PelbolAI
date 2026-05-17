@@ -72,21 +72,21 @@ export default function EditorPage({ onBack, noteId }) {
     <div className="h-full flex bg-black text-slate-200 overflow-hidden">
       <main className="flex-1 flex flex-col bg-[#050505] overflow-hidden">
         {/* Editor Header */}
-        <header className="h-20 border-b border-slate-800 flex items-center justify-between px-8">
-          <div className="flex items-center gap-4">
-            <button onClick={onBack} className="p-2 hover:bg-slate-900 rounded-lg text-slate-500 transition-colors">
+        <header className="h-16 md:h-20 border-b border-slate-800 flex items-center justify-between px-4 md:px-8 shrink-0">
+          <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
+            <button onClick={onBack} className="p-2 hover:bg-slate-900 rounded-lg text-slate-500 transition-colors shrink-0">
               <ArrowLeft size={20} />
             </button>
             <input 
               type="text" 
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="bg-transparent text-xl font-bold outline-none border-b border-transparent focus:border-indigo-500/50 transition-all px-2 py-1"
+              className="bg-transparent text-lg md:text-xl font-bold outline-none border-b border-transparent focus:border-indigo-500/50 transition-all px-2 py-1 w-full truncate"
             />
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-widest mr-4">
+          <div className="flex items-center gap-2 md:gap-4 shrink-0">
+            <div className="hidden md:flex items-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-widest mr-4">
               {saveStatus === 'saving' ? (
                 <span className="flex gap-1"><span className="w-1 h-1 bg-indigo-500 rounded-full animate-bounce"></span><span className="w-1 h-1 bg-indigo-500 rounded-full animate-bounce delay-75"></span></span>
               ) : saveStatus === 'success' ? (
@@ -97,9 +97,9 @@ export default function EditorPage({ onBack, noteId }) {
             </div>
             <button 
               onClick={handleSave}
-              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-lg text-sm font-bold transition-all"
+              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 px-3 md:px-4 py-2 rounded-lg text-sm font-bold transition-all"
             >
-              <Save size={16} /> Save
+              <Save size={16} /> <span className="hidden md:inline">Save</span>
             </button>
             <button 
               onClick={handleDelete}

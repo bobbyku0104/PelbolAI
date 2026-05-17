@@ -7,6 +7,7 @@ import GraphPage from './pages/GraphPage'
 import SettingsPage from './pages/SettingsPage'
 import RecentNotesPage from './pages/RecentNotesPage'
 import Sidebar from './components/dashboard/Sidebar'
+import MobileNav from './components/dashboard/MobileNav'
 import './index.css'
 
 export default function App() {
@@ -82,9 +83,19 @@ export default function App() {
   }[view]
 
   return (
-    <div className="flex h-screen bg-black overflow-hidden">
+    <div className="flex flex-col md:flex-row h-screen bg-black overflow-hidden">
       {/* Global Navigation Sidebar */}
       <Sidebar 
+        activePage={activeLabel}
+        onLogout={handleLogout}
+        onOpenHome={() => setView('dashboard')}
+        onOpenRecent={() => setView('recent-notes')}
+        onOpenGraph={() => setView('graph')}
+        onOpenSettings={() => setView('settings')}
+        onOpenCreate={handleCreateNote}
+      />
+
+      <MobileNav 
         activePage={activeLabel}
         onLogout={handleLogout}
         onOpenHome={() => setView('dashboard')}

@@ -5,7 +5,6 @@ import StatsCard from '../components/dashboard/StatsCard'
 import AISuggestionCard from '../components/dashboard/AISuggestionCard'
 import NoteCard from '../components/dashboard/NoteCard'
 import ActivitySidebar from '../components/dashboard/ActivitySidebar'
-import MobileNav from '../components/dashboard/MobileNav'
 
 export default function DashboardPage({ onOpenNote }) {
   const [searchQuery, setSearchQuery] = useState('')
@@ -40,8 +39,8 @@ export default function DashboardPage({ onOpenNote }) {
       
       <div className="flex-1 flex overflow-hidden">
         {/* Main Dashboard Content */}
-        <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
-          <div className="max-w-6xl mx-auto space-y-10">
+        <div className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
+          <div className="max-w-6xl mx-auto space-y-8 md:space-y-10">
             {/* Welcome Header */}
             <div>
               <div className="flex items-center justify-between mb-2">
@@ -114,8 +113,6 @@ export default function DashboardPage({ onOpenNote }) {
         {/* Right Sidebar - Activity */}
         <ActivitySidebar />
       </div>
-
-      <MobileNav />
     </div>
   )
 }

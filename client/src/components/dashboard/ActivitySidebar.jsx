@@ -15,7 +15,7 @@ export function ActivityItem({ color, title, time, isLast = false }) {
 
 export default function ActivitySidebar() {
   return (
-    <div className="bg-[#0d0d0d] border border-slate-800 rounded-3xl p-8 h-fit">
+    <div className="hidden xl:block w-80 bg-[#0d0d0d] border-l border-slate-800 p-8 h-full overflow-y-auto shrink-0">
       <div className="flex items-center justify-between mb-8">
         <h3 className="font-bold text-lg">Recent Activity</h3>
         <button className="text-xs text-indigo-400 font-bold hover:text-indigo-300 transition-colors uppercase tracking-wider">View all</button>

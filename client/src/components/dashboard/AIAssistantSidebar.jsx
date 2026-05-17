@@ -43,7 +43,7 @@ export default function AIAssistantSidebar({ currentContext }) {
   }
 
   return (
-    <aside className="w-[340px] border-l border-slate-800 bg-[#050505] p-6 flex flex-col gap-6 h-full shadow-2xl">
+    <aside className="w-[340px] border-l border-slate-800 bg-[#050505] p-6 flex flex-col gap-6 h-full shadow-2xl hidden lg:flex">
       <div className="flex items-center justify-between text-indigo-400">
         <div className="flex items-center gap-2">
           <Sparkles className="w-5 h-5 animate-pulse" />
